@@ -136,8 +136,7 @@ public class SDES {
     /*
        Swap left and right side of the binary number
     */
-    public String swap(BinaryNumber b) {
-        BinaryNumber bin = b;
+    public String swap(BinaryNumber bin) {
         int halfsize = bin.size() - ( bin.size() / 2 );
 
         // To swap perform a left circular shift that is half the size of the BinaryNumber
@@ -157,18 +156,20 @@ public class SDES {
         keyp10.lcShift(0, ( keyp10.size() / 2 ) - 1);
         keyp10.lcShift(keyp10.size() / 2 , keyp10.size() - 1);
 
-        sr.delete(0, sr.length());
-        for(int elem : p8) sr.append(keyp10.toString().charAt(elem-1));
+        for(int round = 0; round < 2; ++round) {
+            sr.delete(0, sr.length());
 
-        key1 = new BinaryNumber(sr.toString());
+            for(int elem : p8) sr.append(keyp10.toString().charAt(elem-1));
 
-        keyp10.lcShift(0, ( keyp10.size() / 2 ) - 1, 2);
-        keyp10.lcShift(keyp10.size() / 2 , keyp10.size() - 1, 2);
+            // First round generate key1 and perform left circular shift twice on both halves
+            if(round == 0) {
+                key1 = new BinaryNumber(sr.toString());
+                keyp10.lcShift(0, ( keyp10.size() / 2 ) - 1, 2);
+                keyp10.lcShift(keyp10.size() / 2 , keyp10.size() - 1, 2);
+            }
+            else key2 = new BinaryNumber(sr.toString());
+        }
 
-        sr.delete(0, sr.length());
-        for(int elem : p8) sr.append(keyp10.toString().charAt(elem-1));
-
-        key2 = new BinaryNumber(sr.toString());
     }
 
     public String generateP4(String bits) {
